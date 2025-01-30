@@ -8,6 +8,11 @@ import UIKit
 
 final class TrackersViewController: UIViewController {
     //MARK: - Private Properties
+    
+    private var categories: [TrackerCategory] = []
+    private var visibleCategories: [TrackerCategory] = []
+    private var tracker: [Tracker] = []
+    private var comlitedTracker: [TrackerRecord] = []
     private var currentDate: Date = Date()
     
     private let datePicker: UIDatePicker = {
@@ -30,7 +35,7 @@ final class TrackersViewController: UIViewController {
         view.backgroundColor = .ypWhite
         
         navigationBar()
-        setupConstraints()
+        updateVisibleCategories()
     }
     
     //MARK: - Private Methods
@@ -50,7 +55,7 @@ final class TrackersViewController: UIViewController {
         datePickerBarButtonItem.customView?.widthAnchor.constraint(equalToConstant: 100).isActive = true
         navigationItem.rightBarButtonItem = datePickerBarButtonItem
         
-        datePicker.addTarget(self, action: #selector(datePickerDateSelection), for: .valueChanged)
+        datePicker.addTarget(self, action: #selector(dateChanged), for: .valueChanged)
         
         navigationItem.title = "Трекеры"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -59,26 +64,64 @@ final class TrackersViewController: UIViewController {
         navigationItem.searchController = searchController
     }
     
-    @objc
-    private func addTarget(){
+    private func updateVisibleCategories() {
+        let calendar = Calendar.current
+        let selectedDayIndex = calendar.component(.weekday, from: currentDate)
+        guard let selectedWeekDay = WeekDay.from(weekdayIndex: selectedDayIndex) else { return }
         
+        visibleCategories = categories.compactMap { category in
+            let trackers = category.trackers.filter { tracker in
+                print("Проверка трекера: \(tracker.name)")
+                if tracker.schedule.isEmpty {
+                    print("Трекер без расписания: \(tracker.name)")
+                    return true
+                } else {
+                    let containsWeekDay = tracker.schedule.contains { weekDay in
+                        weekDay == selectedWeekDay
+                    }
+                    print("Трекер содержит \(selectedWeekDay): \(containsWeekDay)")
+                    return containsWeekDay
+                }
+            }
+            if trackers.isEmpty { return nil }
+            return TrackerCategory(
+                title: category.title,
+                trackers: trackers
+            )
+        }
+        if visibleCategories.isEmpty {
+            print("Видимые категории: \(visibleCategories)")
+            createEmptyBlock()
+        } else {
+            //TODO: тут вызов для колекции
+            
+        }
+        //тут обнова
+        //collectionView.reloadData()
     }
     
-    @objc private func datePickerDateSelection() {
-        
+    private func showEmptyBlock(_ show: Bool) {
+        emptyBlock.isHidden = show
+    }
+    // MARK: - Actions
+    @objc
+    private func addTarget(){
+        print("нажата кнопка +")
+    }
+    
+    @objc private func dateChanged() {
+        print("нажата кнопка")
+        currentDate = Calendar.current.startOfDay(for: datePicker.date)
+        updateVisibleCategories()
     }
     
     //MARK: - Constraints and subView
-    private func setupConstraints() {
-        [
-            emptyBlock
-        ].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
-
+    private func createEmptyBlock() {
+        emptyBlock.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emptyBlock)
+        
         NSLayoutConstraint.activate([
-            emptyBlock.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            emptyBlock.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 }

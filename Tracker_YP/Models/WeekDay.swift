@@ -6,7 +6,7 @@
 //
 
 enum WeekDay: String, CaseIterable {
-    case modeay = "Понедельник"
+    case monday = "Понедельник"
     case tuesday = "Вторник"
     case wednesday = "Среда"
     case thursday = "Четверрг"
@@ -16,7 +16,7 @@ enum WeekDay: String, CaseIterable {
     
     var shortWeekDay: String {
         switch self {
-        case .modeay: return "Пн"
+        case .monday: return "Пн"
         case .tuesday: return "Вт"
         case .wednesday: return "Ср"
         case .thursday: return "Чт"
@@ -28,7 +28,7 @@ enum WeekDay: String, CaseIterable {
     
     static func from(weekdayIndex: Int) -> WeekDay? {
         switch weekdayIndex {
-        case 1: return .modeay
+        case 1: return .monday
         case 2: return .tuesday
         case 3: return .wednesday
         case 4: return .thursday
