@@ -1,14 +1,8 @@
-//
-//  TrackersViewController.swift
-//  Tracker_YP
-//
-//  Created by Максим Карпов on 30.01.2025.
-//
 import UIKit
 
-final class TrackersViewController: UIViewController {
-    //MARK: - Private Properties
+final class TrackerViewController: UIViewController {
     
+    //MARK: - Private Properties
     private var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
     private var tracker: [Tracker] = []
@@ -29,6 +23,7 @@ final class TrackersViewController: UIViewController {
         block.setLabel("Что будем отслеживать?")
         return block
     }()
+    
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()

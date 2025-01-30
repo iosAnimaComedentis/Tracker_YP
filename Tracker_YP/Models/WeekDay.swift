@@ -1,10 +1,3 @@
-//
-//  WeekDay.swift
-//  Tracker_YP
-//
-//  Created by Максим Карпов on 30.01.2025.
-//
-
 enum WeekDay: String, CaseIterable {
     case monday = "Понедельник"
     case tuesday = "Вторник"

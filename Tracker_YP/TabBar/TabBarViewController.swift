@@ -1,9 +1,3 @@
-//
-//  Untitled.swift
-//  Tracker_YP
-//
-//  Created by Максим Карпов on 30.01.2025.
-//
 import UIKit
 
 final class TabBarViewController: UITabBarController {
@@ -18,7 +12,7 @@ final class TabBarViewController: UITabBarController {
         tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor.ypGray.cgColor
         
-        let trackerViewController = TrackersViewController()
+        let trackerViewController = TrackerViewController()
         let trackerTabBarItem = UITabBarItem(
             title: "Трекеры",
             image: UIImage(named: "Disc"),
