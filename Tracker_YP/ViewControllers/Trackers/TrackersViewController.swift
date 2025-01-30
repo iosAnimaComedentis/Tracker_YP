@@ -1,19 +1,14 @@
 //
-//  ViewController.swift
+//  TrackersViewController.swift
 //  Tracker_YP
 //
 //  Created by Максим Карпов on 30.01.2025.
 //
-
 import UIKit
 
-class ViewController: UIViewController {
-
+final class TrackersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .colorSelected10
     }
-
-
 }
-
