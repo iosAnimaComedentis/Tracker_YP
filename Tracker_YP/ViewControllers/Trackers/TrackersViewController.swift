@@ -19,12 +19,18 @@ final class TrackersViewController: UIViewController {
         return datePicker
     }()
     
+    private lazy var emptyBlock: EmptyBlock = {
+        let block = EmptyBlock()
+        block.setLabel("Что будем отслеживать?")
+        return block
+    }()
     //MARK: - lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypWhite
         
         navigationBar()
+        setupConstraints()
     }
     
     //MARK: - Private Methods
@@ -60,5 +66,19 @@ final class TrackersViewController: UIViewController {
     
     @objc private func datePickerDateSelection() {
         
+    }
+    
+    //MARK: - Constraints and subView
+    private func setupConstraints() {
+        [
+            emptyBlock
+        ].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+
+        NSLayoutConstraint.activate([
+            emptyBlock.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        ])
     }
 }
