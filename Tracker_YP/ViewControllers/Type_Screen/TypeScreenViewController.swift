@@ -1,7 +1,12 @@
 import UIKit
 
 final class TypeScreenViewController: UIViewController {
+    
+    
     //MARK: - Prorerties
+    weak var trackerViewController: TrackerViewController?
+    weak var delegate: SetupDescriptionDelegate?
+    
     private lazy var habitButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .ypBlack
@@ -66,10 +71,18 @@ final class TypeScreenViewController: UIViewController {
     //MARK: - Actions
     @objc
     private func tapHabitButton() {
-        print("tap Habit Button")
+        let vc = SetupDescriptionViewController(isForHabits: true)
+        vc.delegate = delegate
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .pageSheet
+        present(navController, animated: true)
     }
     @objc
     private func tapEventButton() {
-        print("tap Event Button")
+        let vc = SetupDescriptionViewController(isForHabits: false)
+        vc.delegate = delegate
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .pageSheet
+        present(navController, animated: true)
     }
 }

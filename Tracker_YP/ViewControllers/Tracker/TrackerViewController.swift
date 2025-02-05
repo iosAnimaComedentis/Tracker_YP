@@ -141,7 +141,6 @@ final class TrackerViewController: UIViewController {
     // MARK: - Actions
     @objc
     private func addTarget(){
-        print("нажата кнопка +")
         let vc = TypeScreenViewController()
         //vc.delegate = self
         let navigationController = UINavigationController(rootViewController: vc)
