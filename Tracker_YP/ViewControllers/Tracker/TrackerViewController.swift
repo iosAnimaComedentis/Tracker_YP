@@ -142,6 +142,11 @@ final class TrackerViewController: UIViewController {
     @objc
     private func addTarget(){
         print("нажата кнопка +")
+        let vc = TypeScreenViewController()
+        //vc.delegate = self
+        let navigationController = UINavigationController(rootViewController: vc)
+        navigationController.modalPresentationStyle = .pageSheet
+        present(navigationController, animated: true)
     }
     
     @objc private func dateChanged() {
