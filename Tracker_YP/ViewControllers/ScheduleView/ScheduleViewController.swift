@@ -70,7 +70,7 @@ final class ScheduleViewController: UIViewController {
             }
         }
         
-        print("Selected schedule: \(schedule.map { $0?.rawValue ?? "None" })")
+        print("Добавлено расписание: \(schedule.map { $0?.rawValue ?? "None" })")
     }
     
     //MARK: Methods
@@ -128,13 +128,13 @@ extension ScheduleViewController: UITableViewDataSource {
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: .greatestFiniteMagnitude)
         }
         
-        let switchControl = UISwitch()
-        switchControl.isOn = schedule.contains(weekDay)
-        switchControl.tag = indexPath.row
-        switchControl.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
-        switchControl.tintColor = .ypBlue
-        switchControl.onTintColor = .ypBlue
-        cell.accessoryView = switchControl
+        let switchController = UISwitch()
+        switchController.isOn = schedule.contains(weekDay)
+        switchController.tag = indexPath.row
+        switchController.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+        switchController.tintColor = .ypBlue
+        switchController.onTintColor = .ypBlue
+        cell.accessoryView = switchController
         
         return cell
     }

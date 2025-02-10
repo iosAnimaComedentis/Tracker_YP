@@ -193,11 +193,26 @@ final class SetupDescriptionViewController: UIViewController, ScheduleViewContro
         createButton.isEnabled = isForHabits ? (isNameFilled && isScheduleSelected) : isNameFilled
         createButton.backgroundColor = createButton.isEnabled ? .ypBlack : .ypGray
     }
+    private func createMockTracker(){
+        let newTracker = Tracker(
+            id: UUID(),
+            name: trackerName.text ?? "Привычка",
+            color: .colorSelected5,
+            emoji: "🌟",
+            schedule: self.schedule
+        )
+        
+        let categoryTracker = TrackerCategory(
+            title: self.categoryTitle ?? "Новые трекеры",
+            trackers: [newTracker])
+        delegate?.addTracker(newTracker, to: categoryTracker)
+        presentingViewController?.presentingViewController?.dismiss(animated: true)
+    }
     
     //MARK: Actions
     @objc
     private func createButtonTapped() {
-        print("Создать нажато и создается трекер")
+        createMockTracker()
     }
     
     @objc
