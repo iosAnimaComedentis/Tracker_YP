@@ -5,7 +5,7 @@ final class TrackerViewController: UIViewController {
     //MARK: - Private Properties
     private var categories: [TrackerCategory] = []
     private var visibleCategories: [TrackerCategory] = []
-    private var tracker: [Tracker] = []
+    private var trackers: [Tracker] = []
     private var completedTrackers: [TrackerRecord] = []
     private var currentDate: Date = Date()
     
@@ -142,7 +142,7 @@ final class TrackerViewController: UIViewController {
     @objc
     private func addTarget(){
         let vc = TypeScreenViewController()
-        //vc.delegate = self
+        vc.delegate = self
         let navigationController = UINavigationController(rootViewController: vc)
         navigationController.modalPresentationStyle = .pageSheet
         present(navigationController, animated: true)
@@ -256,5 +256,34 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+}
+
+extension TrackerViewController: SetupDescriptionDelegate {
+    func addTracker(_ tracker: Tracker, to category: TrackerCategory) {
+        var addedToCategory = category.title
+        if let categoryIndex = categories.firstIndex(where: { $0.title == category.title }) {
+            updateCategory(at: categoryIndex, with: tracker)
+        } else {
+            addToDefaultCategory(tracker)
+            addedToCategory = "Новая категория"
+        }
+        trackers.append(tracker)
+        print("Трекер \(tracker.name) добавлен в категорию: \(addedToCategory)")
+        dateChanged()
+    }
+
+    private func updateCategory(at index: Int, with tracker: Tracker) {
+        var updatedTrackers = categories[index].trackers
+        updatedTrackers.append(tracker)
+        categories[index] = TrackerCategory(title: categories[index].title, trackers: updatedTrackers)
+    }
+
+    private func addToDefaultCategory(_ tracker: Tracker) {
+        if let defaultIndex = categories.firstIndex(where: { $0.title == "Домашний уют" }) {
+            updateCategory(at: defaultIndex, with: tracker)
+        } else {
+            categories.append(TrackerCategory(title: "Новая категория", trackers: [tracker]))
+        }
     }
 }

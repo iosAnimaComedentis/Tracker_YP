@@ -4,8 +4,9 @@ protocol SetupDescriptionDelegate: AnyObject {
     func addTracker(_ tracker: Tracker, to category: TrackerCategory)
 }
 
-final class SetupDescriptionViewController: UIViewController {
+final class SetupDescriptionViewController: UIViewController, ScheduleViewControllerDelegate {
     //MARK: Properties
+    
     weak var trackerViewController: TypeScreenViewController?
     weak var delegate: SetupDescriptionDelegate?
     
@@ -28,7 +29,7 @@ final class SetupDescriptionViewController: UIViewController {
         textField.layer.cornerRadius = 16
         textField.clearButtonMode = .whileEditing
         textField.clipsToBounds = true
-        //textField.delegate = self
+        textField.delegate = self
         return textField
     }()
     
@@ -162,6 +163,37 @@ final class SetupDescriptionViewController: UIViewController {
         ])
     }
     
+    private func updateConstraints() {
+        if limitLabel.isHidden {
+            trackerItemsTopConstraint.isActive = false
+            trackerItemsTopConstraint = trackerItems.topAnchor.constraint(equalTo: trackerName.bottomAnchor, constant: 24)
+        } else {
+            trackerItemsTopConstraint.isActive = false
+            trackerItemsTopConstraint = trackerItems.topAnchor.constraint(equalTo: limitLabel.bottomAnchor, constant: 32)
+        }
+        trackerItemsTopConstraint.isActive = true
+        
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func didUpdateSchedule(_ schedule: [WeekDay?]) {
+        self.schedule = schedule
+        validateCreateButtonState()
+        trackerItems.reloadData()
+        print("Обновленное расписание \(schedule.map { $0?.rawValue ?? "None" })")
+    }
+    
+    private func validateCreateButtonState() {
+        let isForHabits = currentItems.contains("Расписание")
+        let isNameFilled = !(trackerName.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true)
+        let isScheduleSelected = !schedule.isEmpty
+        
+        createButton.isEnabled = isForHabits ? (isNameFilled && isScheduleSelected) : isNameFilled
+        createButton.backgroundColor = createButton.isEnabled ? .ypBlack : .ypGray
+    }
+    
     //MARK: Actions
     @objc
     private func createButtonTapped() {
@@ -175,6 +207,31 @@ final class SetupDescriptionViewController: UIViewController {
 }
 
     //MARK: Extension
+extension SetupDescriptionViewController: UITextFieldDelegate {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        print("Пользователь начал редактировать поле")
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        validateCreateButtonState()
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text ?? "") as NSString
+        let updatedText = currentText.replacingCharacters(in: range, with: string)
+        let maxSymbolNumber = 38
+        limitLabel.isHidden = !(updatedText.count >= maxSymbolNumber)
+        updateConstraints()
+        return true
+    }
+}
+
+
 extension SetupDescriptionViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
@@ -187,8 +244,12 @@ extension SetupDescriptionViewController: UITableViewDataSource{
             // TODO: - добавить выбор категории
         case 1:
             print("Расписание")
-            // TODO: - добавить выбор расписания
-
+            let scheduleViewController = ScheduleViewController()
+            scheduleViewController.delegate = self
+            scheduleViewController.loadSelectedSchedule(from: schedule)
+            let navigationController = UINavigationController(rootViewController: scheduleViewController)
+            navigationController.modalPresentationStyle = .pageSheet
+            present(navigationController, animated: true)
         default:
             break
         }
