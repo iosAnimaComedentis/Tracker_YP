@@ -108,11 +108,7 @@ final class SetupDescriptionViewController: UIViewController, ScheduleViewContro
     
     //MARK: Methods
     private func updeteNavBarTitle(_ items: [String]) {
-        if items == itemsForHabits {
-            navigationController?.navigationBar.topItem?.title = "Новая привычка"
-        }else if items == itemsForEvents{
-            navigationController?.navigationBar.topItem?.title = "Новое нерегулярное событие"
-        }
+        navigationController?.navigationBar.topItem?.title = items == itemsForHabits ? "Новая привычка" : "Новое нерегулярное событие"
     }
     
     private func addSubViews() {
@@ -129,7 +125,8 @@ final class SetupDescriptionViewController: UIViewController, ScheduleViewContro
             limitLabel,
             trackerItems,
             createButton,
-            cancelButton
+            cancelButton,
+            
         ].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -160,6 +157,8 @@ final class SetupDescriptionViewController: UIViewController, ScheduleViewContro
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             cancelButton.rightAnchor.constraint(equalTo: createButton.leftAnchor, constant: -8),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
+            
+            
         ])
     }
     

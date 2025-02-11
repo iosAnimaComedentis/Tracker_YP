@@ -4,7 +4,6 @@ final class TypeScreenViewController: UIViewController {
     
     
     //MARK: - Prorerties
-    weak var trackerViewController: TrackerViewController?
     weak var delegate: SetupDescriptionDelegate?
     
     private lazy var habitButton: UIButton = {
